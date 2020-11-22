@@ -12,7 +12,40 @@
 MCLDIR="${MCLDOTDIR:-$HOME/.config/mcl}"
 MCLPROFILES="$MCLDIR/profiles"
 MCLPASSWD="$MCLDIR/passwd"
-SELECTED="$(cat "$MCLPROFILES" | sed "s/\t.*$//g" | dmenu -l 30 -p "Please select a profile:")" || exit 1
+
+mkdir -p $MCLDIR
+
+[ -e $MCLPASSWD ] || {
+	touch $MCLPASSWD && {
+		echo "put your email and password on separate lines in file $MCLPASSWD and run mcl"
+	} || {
+		echo "unable to create $MCLPASSWD pasword file"
+	}; exit 1
+}
+
+[ -e $MCLPROFILES ] || {
+	touch $MCLPROFILES && {
+		echo "
+#                 _                    __ _ _
+#  _ __ ___   ___| |  _ __  _ __ ___  / _(_) | ___  ___
+# | '_ \` _ \\ / __| | | '_ \\| '__/ _ \\| |_| | |/ _ \\/ __|
+# | | | | | | (__| | | |_) | | | (_) |  _| | |  __/\\__ \\
+# |_| |_| |_|\\___|_| | .__/|_|  \\___/|_| |_|_|\\___||___/
+#                    |_|
+#
+# auto-generated $(date)
+
+Latest\t# latest minecraft version, without arguments
+
+# === Additional versions - uncomment to use, create your owns, have fun === #
+# Minecraft 1.6.4\t--version 1.6.4 # uncomment to get Minecraft 1.6.4
+# Minecraft 1.12.2\t--version 1.12.2 --jvmArguments \"-Xmx4G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M\" # uncomment to get Minecraft 1.12.2 with 4GB of RAM" > $MCLPROFILES
+	} || {
+		echo "unable to create $MCLPROFILES profile file"
+	}
+}
+
+SELECTED="$(cat "$MCLPROFILES" | sed "s/#.*\$//g;/^$/d;s/\t.*$//g" | dmenu -l 30 -p "Please select a profile:")" || exit 1
 ARGS="$(grep "$SELECTED" "$MCLPROFILES" | cut -f2 -d"	")"
 cd $MCLDIR
 [ -e ${MCLNOKILLFILE:-/tmp/mclnokill} ] || killall java

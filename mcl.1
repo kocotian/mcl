@@ -1,0 +1,70 @@
+.TH MCL 1 mcl
+.SH NAME
+mcl \- simple minecraft launcher
+.SH SYNOPSIS
+.B mcl
+.SH DESCRIPTION
+mcl is simple minecraft launcher that uses dmenu and minecraft-launcher-cmd.
+.SH CONFIGURATION
+.P
+mcl have own config directory (by default ~/.config/mcl/) which can be changed
+by setting environmental variable
+.B MCLDOTDIR.
+
+In this directory are two files \-
+.B profiles
+and
+.B passwd.
+.B profiles
+file have profiles used by mcl in format:
+
+.I title
+.B TAB
+.I arguments
+
+for example \- a Vanilla 1.12.2 profile would look like this:
+
+.B 1.12.2
+<Tab>
+.B \--version 1.12.2
+
+you can also specify minecraft dotdir
+.I (for example ~/.local/minecraft):
+
+.B 1.12.2
+<Tab>
+.B --version 1.12.2 --minecraftDir ~/.local/minecraft
+
+you would like to specify JVM arguments (e.g. for more RAM), for example:
+
+.B 1.12.2
+<Tab>
+.B --version 1.12.2 --jvmArguments \'-Xmx6G -Xmn2G -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M\'
+
+for more arguments write
+.B minecraft-launcher-cmd
+.RB [ \-h ]
+.SH LOGGING IN
+To use mcl you must log into launcher. That will be done by using
+.B passwd
+file in mcl directory. First line must be your email, second must be password.
+Is recommended to change permissions of this file to
+.I 600
+for security reasons:
+
+.B chmod 700
+.I ~/.config/mcl/passwd
+.SH KILLING JAVA
+On start, mcl will kill all java instances, which is useful for fast switching
+between profiles. If you don't want killing java simply create
+.B /tmp/mclnokill
+file and mcl will not kill instances.
+You can change location of this file by setting environmental variable
+.B MCLNOKILLFILE
+which is useful if you never want to kill java - just move this file to your
+.B MCLDOTDIR
+and in all sessions java won't be killed.
+.SH SEE ALSO
+.BR dmenu (1)
+.SH BUGS
+Make a pull request on github or contact <kocotian@kocotian.pl>

@@ -1,4 +1,8 @@
 # mcl
+
+> [!WARNING]
+> It's really old project. Probably does not work. Archived.
+
 mcl is a simple minecraft launcher that uses dmenu and minecraft-launcher-cmd
 
 ## installation
